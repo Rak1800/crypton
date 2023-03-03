@@ -1,52 +1,59 @@
 import React, { useState } from 'react';
-import math from 'mathjs'
-
 
 function Calculater() {
   const [question, setQuestion] = useState('');
   const [result, setResult] = useState('');
 
-  const handleCalculation = () => {
-    const parsedQuestion = question.match(/(\d+)\s*(plus|minus|times|multiplied by|divided by)\s*(\d+)/i);
-    if (!parsedQuestion) {
-      setResult("Sorry, I didn't understand the question");
-      return;
-    }
+  const handleQuestionChange = (event) => {
+    setQuestion(event.target.value);
+  };
 
-    const [, firstNum, operator, secondNum] = parsedQuestion;
+  const handleCalculate = () => {
+    //let parts = question.split(' ');
+  const parsedQuestion = question.match(/(\d+)\s*(plus|minus|multiplied by|divided by)\s*(\d+)/i);
 
-    let mathOperator;
-    switch (operator.toLowerCase()) {
+  
+
+    const [, firstNum, operator, secondNum] =parsedQuestion
+    console.log(firstNum)
+
+    //let operator = parts[2];
+    let num1 = parseInt(firstNum);
+    let num2 = parseInt(secondNum);
+    let calcResult = '';
+
+    switch (operator) {
       case 'plus':
-        mathOperator = '+';
+        calcResult = num1 + num2;
+        setResult(`${num1} plus ${num2} is ${calcResult}`);
         break;
       case 'minus':
-        mathOperator = '-';
+        calcResult = num1 - num2;
+        setResult(`${num1} minus ${num2} is ${calcResult}`);
         break;
-      case 'times':
       case 'multiplied by':
-        mathOperator = '*';
+        calcResult = num1 * num2;
+        setResult(`${num1} times ${num2} is ${calcResult}`);
         break;
       case 'divided by':
-        mathOperator = '/';
+        calcResult = num1 / num2;
+        setResult(`${num1} divided by ${num2} is ${calcResult}`);
         break;
       default:
-        setResult("Sorry, I didn't understand the operator");
-        return;
+        setResult('Invalid question');
+        break;
     }
-
-    const mathExpression = firstNum + mathOperator + secondNum;
-    const mathResult = math.evaluate(mathExpression);
-    setResult(`${firstNum} ${operator} ${secondNum} is ${mathResult}`);
-  }
+  };
 
   return (
     <div>
-      <input value={question} onChange={(e) => setQuestion(e.target.value)} />
-      <button onClick={handleCalculation}>Calculate</button>
-      <p>{result}</p>
+      <h1>Calc</h1>
+      <input type="text" value={question} onChange={handleQuestionChange} />
+      <button onClick={handleCalculate}>Calculate</button>
+      <h2>{result?result:<h1>Sorry, I didn't understand the question</h1>}
+      </h2>
     </div>
   );
 }
 
-export default Calculater  
+export default Calculater;
